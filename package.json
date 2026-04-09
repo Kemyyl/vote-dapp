@@ -1,0 +1,17 @@
+{
+  "name": "vote-dapp-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts du TP de vote décentralisé",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy:local": "hardhat ignition deploy ignition/modules/VotingSimple.js --network localhost",
+    "deploy:sepolia": "hardhat ignition deploy ignition/modules/VotingSimple.js --network sepolia",
+    "node": "hardhat node"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.0",
+    "dotenv": "^16.4.5"
+  }
+}

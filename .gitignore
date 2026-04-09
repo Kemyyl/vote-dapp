@@ -1,0 +1,21 @@
+# Environnement (clés privées, API keys)
+.env
+.env.local
+
+# Dépendances
+node_modules/
+frontend/node_modules/
+
+# Hardhat
+cache/
+artifacts/
+
+# Ignition deployments
+ignition/deployments/
+
+# Frontend build
+frontend/dist/
+
+# Divers
+.DS_Store
+*.log

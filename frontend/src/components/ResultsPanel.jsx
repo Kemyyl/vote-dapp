@@ -21,6 +21,9 @@ export default function ResultsPanel({ candidates }) {
                   {c.voteCount} vote{c.voteCount !== 1 ? "s" : ""} ({pct}%)
                 </span>
               </div>
+              {c.description && (
+                <p className="candidate-description">{c.description}</p>
+              )}
               <div className="progress-bar">
                 <div className="progress-fill" style={{ width: `${pct}%` }} />
               </div>

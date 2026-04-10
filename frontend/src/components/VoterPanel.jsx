@@ -24,7 +24,12 @@ export default function VoterPanel({ candidates, hasVoted, votingOpen, onVote, l
       <div className="candidates-list">
         {candidates.map((c) => (
           <div key={c.id} className="candidate-vote-card">
-            <span className="candidate-name">{c.name}</span>
+            <div className="candidate-info">
+              <span className="candidate-name">{c.name}</span>
+              {c.description && (
+                <p className="candidate-description">{c.description}</p>
+              )}
+            </div>
             <button
               onClick={() => onVote(c.id)}
               disabled={loading}

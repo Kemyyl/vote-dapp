@@ -96,8 +96,11 @@ body {
   font-size: 0.85rem;
   letter-spacing: 0.5px;
 }
-.vote-status.open   { background: #14532d; color: #86efac; }
-.vote-status.closed { background: #7f1d1d; color: #fca5a5; }
+.vote-status.open            { background: #14532d; color: #86efac; }
+.vote-status.closed          { background: #7f1d1d; color: #fca5a5; }
+.vote-status.phase-registering { background: #78350f; color: #fcd34d; }
+.vote-status.phase-voting      { background: #14532d; color: #86efac; }
+.vote-status.phase-ended       { background: #1e293b; color: #94a3b8; }
 
 .role-badge {
   padding: 8px 18px;
@@ -161,9 +164,10 @@ body {
   margin-bottom: 10px;
 }
 
-.admin-panel  { border-left: 4px solid #7c3aed; }
-.voter-panel  { border-left: 4px solid #3b82f6; }
-.results-panel { border-left: 4px solid #f59e0b; }
+.admin-panel        { border-left: 4px solid #7c3aed; }
+.voter-panel        { border-left: 4px solid #3b82f6; }
+.results-panel      { border-left: 4px solid #f59e0b; }
+.registration-panel { border-left: 4px solid #f59e0b; }
 
 /* ─── Admin panel ─────────────────────────────────────────────────────────── */
 
@@ -213,6 +217,74 @@ body {
 .candidate-name {
   font-weight: 600;
   font-size: 1rem;
+}
+
+.candidate-description {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.candidate-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.candidate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.description-input {
+  padding: 10px 14px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.description-input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.info-text {
+  color: #fcd34d;
+  font-size: 0.9rem;
+}
+
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.pending-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0f172a;
+  padding: 12px 14px;
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.action-row {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.candidate-address {
+  font-size: 0.78rem;
+  color: #475569;
+  font-family: monospace;
+  margin-top: 2px;
 }
 
 /* ─── Results panel ───────────────────────────────────────────────────────── */

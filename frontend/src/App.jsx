@@ -2,6 +2,7 @@ import { useVoting } from "./hooks/useVoting";
 import ConnectWallet from "./components/ConnectWallet";
 import StatusBanner from "./components/StatusBanner";
 import AdminPanel from "./components/AdminPanel";
+import RegistrationPanel from "./components/RegistrationPanel";
 import VoterPanel from "./components/VoterPanel";
 import ResultsPanel from "./components/ResultsPanel";
 
@@ -22,7 +23,7 @@ function App() {
       {voting.account ? (
         <>
           <StatusBanner
-            votingOpen={voting.votingOpen}
+            workflowStatus={voting.workflowStatus}
             isOwner={voting.isOwner}
             isVoter={voting.isVoter}
           />
@@ -41,9 +42,29 @@ function App() {
           {voting.isOwner && (
             <AdminPanel
               onAddVoter={voting.addVoter}
+              onRejectRegistration={voting.rejectRegistration}
               onStartVoting={voting.startVoting}
               onStopVoting={voting.stopVoting}
+              onApproveCandidate={voting.approveCandidate}
+              onRejectCandidate={voting.rejectCandidate}
+              onRemoveCandidate={voting.removeCandidate}
               votingOpen={voting.votingOpen}
+              workflowStatus={voting.workflowStatus}
+              candidates={voting.candidates}
+              pendingCandidates={voting.pendingCandidates}
+              pendingRegistrations={voting.pendingRegistrations}
+              loading={voting.loading}
+            />
+          )}
+
+          {/* Phase d'inscription : panel visible pour les non-admin */}
+          {!voting.isOwner && voting.workflowStatus === 0 && (
+            <RegistrationPanel
+              isVoter={voting.isVoter}
+              registrationRequested={voting.registrationRequested}
+              hasPendingApplication={voting.hasPendingApplication}
+              onRequestRegistration={voting.requestRegistration}
+              onRegisterAsCandidate={voting.registerAsCandidate}
               loading={voting.loading}
             />
           )}

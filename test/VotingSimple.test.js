@@ -3,7 +3,7 @@ const { ethers } = require("hardhat");
 const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 
 describe("VotingSimple", function () {
-  const CANDIDATE_NAMES = ["Alice", "Bob", "Charlie"];
+  const CANDIDATE_NAMES = ["Anthony", "Abdu", "Kemyl", "Saf"];
 
   async function deployFixture() {
     const [owner, voter1, voter2, voter3, nonVoter] = await ethers.getSigners();
@@ -12,7 +12,6 @@ describe("VotingSimple", function () {
     return { voting, owner, voter1, voter2, voter3, nonVoter };
   }
 
-  // Helper : déploie + inscrit voter1 & voter2 + ouvre le vote
   async function deployAndOpenFixture() {
     const { voting, owner, voter1, voter2, voter3, nonVoter } = await loadFixture(deployFixture);
     await voting.addVoter(voter1.address);
@@ -26,8 +25,8 @@ describe("VotingSimple", function () {
   describe("Déploiement", function () {
     it("Test 1 : initialise correctement les candidats", async function () {
       const { voting } = await loadFixture(deployFixture);
-      expect(await voting.getCandidateCount()).to.equal(3);
-      for (let i = 0; i < 3; i++) {
+      expect(await voting.getCandidateCount()).to.equal(CANDIDATE_NAMES.length);
+      for (let i = 0; i < CANDIDATE_NAMES.length; i++) {
         const [name, voteCount] = await voting.getCandidate(i);
         expect(name).to.equal(CANDIDATE_NAMES[i]);
         expect(voteCount).to.equal(0);
@@ -147,7 +146,6 @@ describe("VotingSimple", function () {
     });
   });
 
-  // ─── Résultats ─────────────────────────────────────────────────────────────
 
   describe("Résultats", function () {
     it("Test 12 : getWinner retourne le bon candidat", async function () {
@@ -157,13 +155,13 @@ describe("VotingSimple", function () {
       await voting.addVoter(voter3.address);
       await voting.startVoting();
 
-      await voting.connect(voter1).vote(1); // Bob
-      await voting.connect(voter2).vote(1); // Bob
-      await voting.connect(voter3).vote(0); // Alice
+      await voting.connect(voter1).vote(1); 
+      await voting.connect(voter2).vote(1); 
+      await voting.connect(voter3).vote(0); 
 
       const [winnerIndex, winnerName, winnerVotes] = await voting.getWinner();
       expect(winnerIndex).to.equal(1);
-      expect(winnerName).to.equal("Bob");
+      expect(winnerName).to.equal("Abdu");
       expect(winnerVotes).to.equal(2);
     });
 
@@ -173,8 +171,8 @@ describe("VotingSimple", function () {
       await voting.addVoter(voter2.address);
       await voting.startVoting();
 
-      await voting.connect(voter1).vote(0); // Alice
-      await voting.connect(voter2).vote(1); // Bob (égalité)
+      await voting.connect(voter1).vote(0); 
+      await voting.connect(voter2).vote(1); 
 
       // En cas d'égalité, le premier candidat (index 0) doit gagner
       const [winnerIndex] = await voting.getWinner();

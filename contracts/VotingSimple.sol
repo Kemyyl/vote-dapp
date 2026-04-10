@@ -125,6 +125,19 @@ contract VotingSimple {
         }
     }
 
+    /// @notice L'admin approuve toutes les demandes d'inscription en une seule transaction
+    function approveAllRegistrations() external onlyOwner {
+        require(workflowStatus == WorkflowStatus.RegisteringVoters, "Registration is closed");
+        uint256 len = registrationRequestList.length;
+        require(len > 0, "No pending registrations");
+        for (uint256 i = 0; i < len; i++) {
+            address voter = registrationRequestList[i];
+            registeredVoters[voter] = true;
+            emit VoterRegistered(voter);
+        }
+        delete registrationRequestList;
+    }
+
     /// @notice Retourne toutes les demandes d'inscription en attente
     function getRegistrationRequests() external view returns (address[] memory) {
         return registrationRequestList;
@@ -208,6 +221,13 @@ contract VotingSimple {
         workflowStatus = WorkflowStatus.VotingSessionEnded;
         emit WorkflowStatusChanged(1, 2);
         emit VotingStopped();
+    }
+
+    function reopenRegistration() external onlyOwner {
+        require(workflowStatus != WorkflowStatus.RegisteringVoters, "Already in registration phase");
+        uint8 prev = uint8(workflowStatus);
+        workflowStatus = WorkflowStatus.RegisteringVoters;
+        emit WorkflowStatusChanged(prev, 0);
     }
 
     // ─── Vote ─────────────────────────────────────────────────────────────────

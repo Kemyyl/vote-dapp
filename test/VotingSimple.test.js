@@ -305,6 +305,131 @@ describe("VotingSimple", function () {
     });
   });
 
+  // ─── Approbation en masse ─────────────────────────────────────────────────
+
+  describe("Approbation en masse (approveAllRegistrations)", function () {
+    it("L'admin peut approuver toutes les demandes en une transaction", async function () {
+      const { voting, voter1, voter2, voter3 } = await loadFixture(deployFixture);
+      await voting.connect(voter1).requestRegistration();
+      await voting.connect(voter2).requestRegistration();
+      await voting.connect(voter3).requestRegistration();
+      await voting.approveAllRegistrations();
+      expect(await voting.registeredVoters(voter1.address)).to.be.true;
+      expect(await voting.registeredVoters(voter2.address)).to.be.true;
+      expect(await voting.registeredVoters(voter3.address)).to.be.true;
+    });
+
+    it("La liste des demandes est vide après approbation en masse", async function () {
+      const { voting, voter1, voter2 } = await loadFixture(deployFixture);
+      await voting.connect(voter1).requestRegistration();
+      await voting.connect(voter2).requestRegistration();
+      await voting.approveAllRegistrations();
+      const requests = await voting.getRegistrationRequests();
+      expect(requests.length).to.equal(0);
+    });
+
+    it("Les events VoterRegistered sont émis pour chaque électeur approuvé", async function () {
+      const { voting, voter1, voter2 } = await loadFixture(deployFixture);
+      await voting.connect(voter1).requestRegistration();
+      await voting.connect(voter2).requestRegistration();
+      const tx = await voting.approveAllRegistrations();
+      await expect(tx).to.emit(voting, "VoterRegistered").withArgs(voter1.address);
+      await expect(tx).to.emit(voting, "VoterRegistered").withArgs(voter2.address);
+    });
+
+    it("Impossible d'approuver en masse s'il n'y a aucune demande", async function () {
+      const { voting } = await loadFixture(deployFixture);
+      await expect(voting.approveAllRegistrations()).to.be.revertedWith(
+        "No pending registrations"
+      );
+    });
+
+    it("Un non-admin ne peut PAS approuver en masse", async function () {
+      const { voting, voter1, voter2 } = await loadFixture(deployFixture);
+      await voting.connect(voter2).requestRegistration();
+      await expect(voting.connect(voter1).approveAllRegistrations()).to.be.revertedWith(
+        "Not the owner"
+      );
+    });
+
+    it("Impossible d'approuver en masse quand le vote est ouvert", async function () {
+      const { voting, voter1 } = await loadFixture(deployFixture);
+      await voting.connect(voter1).requestRegistration();
+      await voting.startVoting();
+      await expect(voting.approveAllRegistrations()).to.be.revertedWith(
+        "Registration is closed"
+      );
+    });
+  });
+
+  // ─── Réouverture des inscriptions ─────────────────────────────────────────
+
+  describe("Réouverture des inscriptions (reopenRegistration)", function () {
+    it("L'admin peut rouvrir les inscriptions depuis la phase vote (1 → 0)", async function () {
+      const { voting } = await loadFixture(deployFixture);
+      await voting.startVoting();
+      expect(await voting.workflowStatus()).to.equal(1);
+      await expect(voting.reopenRegistration())
+        .to.emit(voting, "WorkflowStatusChanged")
+        .withArgs(1, 0);
+      expect(await voting.workflowStatus()).to.equal(0);
+    });
+
+    it("L'admin peut rouvrir les inscriptions depuis la phase terminée (2 → 0)", async function () {
+      const { voting } = await loadFixture(deployFixture);
+      await voting.startVoting();
+      await voting.stopVoting();
+      expect(await voting.workflowStatus()).to.equal(2);
+      await expect(voting.reopenRegistration())
+        .to.emit(voting, "WorkflowStatusChanged")
+        .withArgs(2, 0);
+      expect(await voting.workflowStatus()).to.equal(0);
+    });
+
+    it("Impossible de rouvrir les inscriptions si déjà en phase inscription (0)", async function () {
+      const { voting } = await loadFixture(deployFixture);
+      expect(await voting.workflowStatus()).to.equal(0);
+      await expect(voting.reopenRegistration()).to.be.revertedWith(
+        "Already in registration phase"
+      );
+    });
+
+    it("Un non-admin ne peut PAS rouvrir les inscriptions", async function () {
+      const { voting, voter1 } = await loadFixture(deployFixture);
+      await voting.startVoting();
+      await expect(voting.connect(voter1).reopenRegistration()).to.be.revertedWith(
+        "Not the owner"
+      );
+    });
+
+    it("Après réouverture, l'admin peut à nouveau ajouter un électeur", async function () {
+      const { voting, voter3 } = await loadFixture(deployFixture);
+      await voting.startVoting();
+      await voting.reopenRegistration();
+      await expect(voting.addVoter(voter3.address))
+        .to.emit(voting, "VoterRegistered")
+        .withArgs(voter3.address);
+      expect(await voting.registeredVoters(voter3.address)).to.be.true;
+    });
+
+    it("Après réouverture, un utilisateur peut à nouveau s'inscrire", async function () {
+      const { voting, nonVoter } = await loadFixture(deployFixture);
+      await voting.startVoting();
+      await voting.reopenRegistration();
+      await expect(voting.connect(nonVoter).requestRegistration())
+        .to.emit(voting, "VoterRegistrationRequested")
+        .withArgs(nonVoter.address);
+    });
+
+    it("Après réouverture, votingOpen repasse à false", async function () {
+      const { voting } = await loadFixture(deployFixture);
+      await voting.startVoting();
+      expect(await voting.votingOpen()).to.be.true;
+      await voting.reopenRegistration();
+      expect(await voting.votingOpen()).to.be.false;
+    });
+  });
+
   describe("Résultats", function () {
     it("Test 12 : getWinner retourne le bon candidat", async function () {
       const { voting, voter1, voter2, voter3 } = await loadFixture(deployFixture);

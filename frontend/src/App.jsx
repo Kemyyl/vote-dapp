@@ -42,9 +42,11 @@ function App() {
           {voting.isOwner && (
             <AdminPanel
               onAddVoter={voting.addVoter}
+              onApproveAllRegistrations={voting.approveAllRegistrations}
               onRejectRegistration={voting.rejectRegistration}
               onStartVoting={voting.startVoting}
               onStopVoting={voting.stopVoting}
+              onReopenRegistration={voting.reopenRegistration}
               onApproveCandidate={voting.approveCandidate}
               onRejectCandidate={voting.rejectCandidate}
               onRemoveCandidate={voting.removeCandidate}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function AdminPanel({
-  onAddVoter, onRejectRegistration, onStartVoting, onStopVoting,
+  onAddVoter, onApproveAllRegistrations, onRejectRegistration, onStartVoting, onStopVoting, onReopenRegistration,
   onApproveCandidate, onRejectCandidate, onRemoveCandidate,
   votingOpen, workflowStatus, candidates, pendingCandidates, pendingRegistrations, loading,
 }) {
@@ -49,29 +49,39 @@ export default function AdminPanel({
           {pendingRegistrations.length === 0 ? (
             <p className="muted">Aucune demande en attente.</p>
           ) : (
-            <div className="pending-list">
-              {pendingRegistrations.map((addr) => (
-                <div key={addr} className="pending-card">
-                  <code className="candidate-address">{addr.slice(0, 14)}...{addr.slice(-6)}</code>
-                  <div className="action-row">
-                    <button
-                      onClick={() => onAddVoter(addr)}
-                      disabled={loading}
-                      className="btn btn-success"
-                    >
-                      {loading ? "..." : "Approuver"}
-                    </button>
-                    <button
-                      onClick={() => onRejectRegistration(addr)}
-                      disabled={loading}
-                      className="btn btn-danger"
-                    >
-                      {loading ? "..." : "Rejeter"}
-                    </button>
+            <>
+              <button
+                onClick={onApproveAllRegistrations}
+                disabled={loading}
+                className="btn btn-success"
+                style={{ marginBottom: "0.75rem" }}
+              >
+                {loading ? "..." : `Tout approuver (${pendingRegistrations.length})`}
+              </button>
+              <div className="pending-list">
+                {pendingRegistrations.map((addr) => (
+                  <div key={addr} className="pending-card">
+                    <code className="candidate-address">{addr.slice(0, 14)}...{addr.slice(-6)}</code>
+                    <div className="action-row">
+                      <button
+                        onClick={() => onAddVoter(addr)}
+                        disabled={loading}
+                        className="btn btn-success"
+                      >
+                        {loading ? "..." : "Approuver"}
+                      </button>
+                      <button
+                        onClick={() => onRejectRegistration(addr)}
+                        disabled={loading}
+                        className="btn btn-danger"
+                      >
+                        {loading ? "..." : "Rejeter"}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       )}
@@ -152,6 +162,16 @@ export default function AdminPanel({
         ) : (
           <button onClick={onStopVoting} disabled={loading} className="btn btn-danger">
             {loading ? "..." : "Fermer le vote"}
+          </button>
+        )}
+        {workflowStatus > 0 && (
+          <button
+            onClick={onReopenRegistration}
+            disabled={loading}
+            className="btn btn-warning"
+            style={{ marginTop: "0.5rem" }}
+          >
+            {loading ? "..." : "Revenir aux inscriptions"}
           </button>
         )}
       </div>

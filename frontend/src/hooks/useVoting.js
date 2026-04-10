@@ -138,10 +138,12 @@ export function useVoting() {
     }
   }, [account, refresh]);
 
-  const addVoter            = useCallback((address) => contract && sendTx(contract.addVoter(address)), [contract, sendTx]);
-  const rejectRegistration  = useCallback((address) => contract && sendTx(contract.rejectRegistration(address)), [contract, sendTx]);
-  const startVoting       = useCallback(() => contract && sendTx(contract.startVoting()), [contract, sendTx]);
-  const stopVoting        = useCallback(() => contract && sendTx(contract.stopVoting()), [contract, sendTx]);
+  const addVoter                = useCallback((address) => contract && sendTx(contract.addVoter(address)), [contract, sendTx]);
+  const approveAllRegistrations = useCallback(() => contract && sendTx(contract.approveAllRegistrations()), [contract, sendTx]);
+  const rejectRegistration      = useCallback((address) => contract && sendTx(contract.rejectRegistration(address)), [contract, sendTx]);
+  const startVoting         = useCallback(() => contract && sendTx(contract.startVoting()), [contract, sendTx]);
+  const stopVoting          = useCallback(() => contract && sendTx(contract.stopVoting()), [contract, sendTx]);
+  const reopenRegistration  = useCallback(() => contract && sendTx(contract.reopenRegistration()), [contract, sendTx]);
   const approveCandidate  = useCallback((address) => contract && sendTx(contract.approveCandidate(address)), [contract, sendTx]);
   const rejectCandidate   = useCallback((address) => contract && sendTx(contract.rejectCandidate(address)), [contract, sendTx]);
   const removeCandidate   = useCallback((index) => contract && sendTx(contract.removeCandidate(index)), [contract, sendTx]);
@@ -153,7 +155,7 @@ export function useVoting() {
     account, candidates, pendingCandidates, pendingRegistrations, votingOpen, workflowStatus,
     isOwner, isVoter, hasVoted, registrationRequested, hasPendingApplication,
     loading, error, txHash,
-    connectWallet, addVoter, rejectRegistration, startVoting, stopVoting,
+    connectWallet, addVoter, approveAllRegistrations, rejectRegistration, startVoting, stopVoting, reopenRegistration,
     approveCandidate, rejectCandidate, removeCandidate,
     requestRegistration, registerAsCandidate, vote,
   };

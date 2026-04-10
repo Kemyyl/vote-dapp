@@ -1,5 +1,5 @@
 // Mettez à jour cette adresse après avoir déployé le contrat sur Sepolia
-export const CONTRACT_ADDRESS = "0x4B89E637713731B1eaC9F6370Ca6E1b31193d8ff";
+export const CONTRACT_ADDRESS = "0xf4daE7149703DFFEF55e84a6F8372f3c6D99Ca33";
 
 // ABI en format human-readable (accepté par ethers.js v6)
 export const CONTRACT_ABI = [
@@ -16,9 +16,11 @@ export const CONTRACT_ABI = [
 
   // Fonctions admin
   "function addVoter(address _voter)",
+  "function approveAllRegistrations()",
   "function rejectRegistration(address _voter)",
   "function startVoting()",
   "function stopVoting()",
+  "function reopenRegistration()",
   "function approveCandidate(address _candidate)",
   "function rejectCandidate(address _candidate)",
   "function removeCandidate(uint256 _index)",

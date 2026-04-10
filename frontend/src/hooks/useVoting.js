@@ -72,6 +72,7 @@ export function useVoting() {
       await refresh(addr);
       readContract.on("VoterRegistered", () => refresh(addr));
       readContract.on("VotingStarted", () => refresh(addr));
+      readContract.on("VotingStopped", () => refresh(addr));
       readContract.on("VoteCast", () => refresh(addr));
       window.ethereum.on("accountsChanged", () => window.location.reload());
     } catch (err) {
@@ -107,6 +108,11 @@ export function useVoting() {
     [contract, sendTx]
   );
 
+  const stopVoting = useCallback(
+    () => contract && sendTx(contract.stopVoting()),
+    [contract, sendTx]
+  );
+
   const vote = useCallback(
     (candidateId) => contract && sendTx(contract.vote(candidateId)),
     [contract, sendTx]
@@ -115,6 +121,6 @@ export function useVoting() {
   return {
     account, candidates, votingOpen, isOwner, isVoter, hasVoted,
     loading, error, txHash,
-    connectWallet, addVoter, startVoting, vote,
+    connectWallet, addVoter, startVoting, stopVoting, vote,
   };
 }

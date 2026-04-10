@@ -42,6 +42,7 @@ function App() {
             <AdminPanel
               onAddVoter={voting.addVoter}
               onStartVoting={voting.startVoting}
+              onStopVoting={voting.stopVoting}
               votingOpen={voting.votingOpen}
               loading={voting.loading}
             />

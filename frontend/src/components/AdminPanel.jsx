@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function AdminPanel({ onAddVoter, onStartVoting, votingOpen, loading }) {
+export default function AdminPanel({ onAddVoter, onStartVoting, onStopVoting, votingOpen, loading }) {
   const [voterAddress, setVoterAddress] = useState("");
 
   const handleAdd = async () => {
@@ -34,14 +34,18 @@ export default function AdminPanel({ onAddVoter, onStartVoting, votingOpen, load
         </div>
       </div>
 
-      {!votingOpen && (
-        <div className="panel-section">
-          <h3>Gestion du vote</h3>
+      <div className="panel-section">
+        <h3>Gestion du vote</h3>
+        {!votingOpen ? (
           <button onClick={onStartVoting} disabled={loading} className="btn btn-success">
             {loading ? "..." : "Ouvrir le vote"}
           </button>
-        </div>
-      )}
+        ) : (
+          <button onClick={onStopVoting} disabled={loading} className="btn btn-danger">
+            {loading ? "..." : "Fermer le vote"}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

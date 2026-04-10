@@ -80,6 +80,34 @@ describe("VotingSimple", function () {
     });
   });
 
+  // ─── Fermeture du vote ────────────────────────────────────────────────────
+
+  describe("Fermeture du vote", function () {
+    it("Test 5b : l'admin peut fermer le vote", async function () {
+      const { voting } = await loadFixture(deployFixture);
+      await voting.startVoting();
+      await expect(voting.stopVoting()).to.emit(voting, "VotingStopped");
+      expect(await voting.votingOpen()).to.be.false;
+    });
+
+    it("Test 5c : un non-admin ne peut PAS fermer le vote", async function () {
+      const { voting, voter1 } = await loadFixture(deployFixture);
+      await voting.startVoting();
+      await expect(voting.connect(voter1).stopVoting()).to.be.revertedWith("Not the owner");
+    });
+
+    it("Test 5d : impossible de fermer un vote déjà fermé", async function () {
+      const { voting } = await loadFixture(deployFixture);
+      await expect(voting.stopVoting()).to.be.revertedWith("Voting is not open");
+    });
+
+    it("Test 5e : impossible de voter après fermeture du vote", async function () {
+      const { voting, voter1 } = await loadFixture(deployAndOpenFixture);
+      await voting.stopVoting();
+      await expect(voting.connect(voter1).vote(0)).to.be.revertedWith("Voting is not open");
+    });
+  });
+
   // ─── Vote ──────────────────────────────────────────────────────────────────
 
   describe("Vote", function () {

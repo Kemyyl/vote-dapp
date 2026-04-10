@@ -17,6 +17,7 @@ contract VotingSimple {
 
     event VoterRegistered(address indexed voter);
     event VotingStarted();
+    event VotingStopped();
     event VoteCast(address indexed voter, uint256 indexed candidateIndex);
 
     modifier onlyOwner() {
@@ -53,6 +54,13 @@ contract VotingSimple {
         require(!votingOpen, "Voting already open");
         votingOpen = true;
         emit VotingStarted();
+    }
+
+    /// @notice L'admin ferme le vote
+    function stopVoting() external onlyOwner {
+        require(votingOpen, "Voting is not open");
+        votingOpen = false;
+        emit VotingStopped();
     }
 
     /// @notice Un électeur inscrit vote pour un candidat

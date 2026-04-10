@@ -65,6 +65,7 @@ body {
 
 .btn-primary { background: #6366f1; color: #fff; }
 .btn-success { background: #22c55e; color: #fff; }
+.btn-danger  { background: #ef4444; color: #fff; }
 .btn-vote    { background: #3b82f6; color: #fff; padding: 8px 16px; }
 
 /* ─── Wallet ──────────────────────────────────────────────────────────────── */

@@ -1,6 +1,7 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+import { expect } from "chai";
+import hre from "hardhat";
+const { ethers } = hre;
+import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 
 describe("VotingSimple", function () {
   const CANDIDATE_NAMES = ["Anthony", "Abdu", "Kemyl", "Saf"];

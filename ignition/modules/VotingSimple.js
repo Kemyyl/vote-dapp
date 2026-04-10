@@ -1,6 +1,6 @@
-const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
-module.exports = buildModule("VotingSimpleModule", (m) => {
+export default buildModule("VotingSimpleModule", (m) => {
   const candidateNames = m.getParameter("candidateNames", [
     "Anthony",
     "Abdu",

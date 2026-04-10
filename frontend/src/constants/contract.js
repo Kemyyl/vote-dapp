@@ -1,5 +1,5 @@
 // Mettez à jour cette adresse après avoir déployé le contrat sur Sepolia
-export const CONTRACT_ADDRESS = "0xf4daE7149703DFFEF55e84a6F8372f3c6D99Ca33";
+export const CONTRACT_ADDRESS = "0xE87926a765AD0E9ad86dd53B8a135f977B369692";
 
 // ABI en format human-readable (accepté par ethers.js v6)
 export const CONTRACT_ABI = [

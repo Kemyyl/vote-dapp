@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "vote-dapp-contracts",
   "version": "1.0.0",
   "description": "Smart contracts du TP de vote décentralisé",
